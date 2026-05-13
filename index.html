@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calcolo Letterale - Prof. Flavio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf6f0;
+    --card: #ffffff;
+    --ink: #2a2a33;
+    --ink-soft: #5a5a66;
+    --muted: #a8a8b0;
+    --border: #e8e2d6;
+    --shadow: 0 4px 20px rgba(80, 60, 40, 0.08);
+    --shadow-lg: 0 10px 40px rgba(80, 60, 40, 0.15);
+
+    /* Colori delle lettere - codifica percettiva costante */
+    --a-color: #2d8659;       /* verde */
+    --a-bg: #d6f0e2;
+    --a-light: #ebf9f2;
+
+    --b-color: #d97706;       /* arancio */
+    --b-bg: #fde8cf;
+    --b-light: #fef3e2;
+
+    --c-color: #7c3aed;       /* viola */
+    --c-bg: #e9dffc;
+    --c-light: #f3edfe;
+
+    --d-color: #db2777;       /* rosa */
+    --d-bg: #fbd6e6;
+    --d-light: #fde8f1;
+
+    --x-color: #0891b2;       /* ciano */
+    --x-bg: #cff0f7;
+    --x-light: #e3f6fb;
+
+    --y-color: #ca8a04;       /* ambra */
+    --y-bg: #fdeaa6;
+    --y-light: #fef5cf;
+
+    --z-color: #9333ea;       /* magenta */
+    --z-bg: #e9d7fc;
+    --z-light: #f4eafe;
+
+    --success: #16a34a;
+    --success-bg: #dcfce7;
+    --warn: #ea580c;
+    --warn-bg: #ffedd5;
+    --primary: #1e40af;
+    --primary-bg: #dbeafe;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    font-family: 'Lexend', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  /* ===== LAYOUT ===== */
+  .app {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    background: #fff;
+    border-right: 2px solid var(--border);
+    padding: 24px 18px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 12px;
+    background: linear-gradient(135deg, #fef3e2, #d6f0e2);
+    border-radius: 16px;
+    margin-bottom: 28px;
+    border: 2px solid var(--border);
+  }
+  .logo-mark {
+    width: 44px;
+    height: 44px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .logo-text { line-height: 1.1; }
+  .logo-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .logo-sub {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  .menu-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 0 12px;
+    margin: 20px 0 8px 0;
+  }
+  .menu-title:first-of-type { margin-top: 0; }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 4px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    transition: all 0.15s;
+  }
+  .menu-item:hover { background: #f5f0e4; }
+  .menu-item.active {
+    background: var(--ink);
+    color: #fff;
+  }
+  .menu-item.active .menu-stars { color: #fbbf24; }
+  .menu-emoji {
+    font-size: 18px;
+    flex-shrink: 0;
+    width: 24px;
+    text-align: center;
+  }
+  .menu-label { flex: 1; }
+  .menu-stars {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ===== MAIN ===== */
+  .main {
+    padding: 32px 48px 48px 48px;
+    max-width: 1100px;
+  }
+
+  .page-title {
+    font-weight: 800;
+    font-size: 34px;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .page-subtitle {
+    color: var(--ink-soft);
+    font-size: 18px;
+    margin-bottom: 32px;
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  /* ===== HOME ===== */
+  .welcome {
+    background: linear-gradient(135deg, #fef3e2 0%, #d6f0e2 50%, #e9dffc 100%);
+    padding: 40px;
+    border-radius: 24px;
+    margin-bottom: 28px;
+    border: 2px solid var(--border);
+  }
+  .welcome h1 {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+  }
+  .welcome p {
+    font-size: 19px;
+    color: var(--ink-soft);
+    max-width: 600px;
+  }
+
+  .levels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .level-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    font-family: inherit;
+  }
+  .level-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--ink);
+  }
+  .level-card-emoji {
+    font-size: 34px;
+    margin-bottom: 8px;
+  }
+  .level-card-num {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .level-card-title {
+    font-weight: 700;
+    font-size: 17px;
+    margin: 4px 0 6px 0;
+  }
+  .level-card-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  .level-card-progress {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ===== EXERCISE AREA ===== */
+  .exercise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .exercise-counter {
+    background: var(--primary-bg);
+    color: var(--primary);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .instruction {
+    background: #fffbea;
+    border: 2px solid #fde68a;
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    font-weight: 600;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .instruction-emoji { font-size: 26px; flex-shrink: 0; }
+
+  .expression {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f9f5ee;
+    border-radius: 16px;
+    font-size: 48px;
+    font-weight: 700;
+    margin: 20px 0;
+    letter-spacing: 2px;
+    border: 2px dashed var(--border);
+    user-select: none;
+    line-height: 1.3;
+  }
+
+  /* Termini cliccabili */
+  .term {
+    display: inline-block;
+    padding: 8px 14px;
+    margin: 4px 3px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: #fff;
+    border: 3px solid transparent;
+  }
+  .term.clickable:hover {
+    transform: translateY(-2px);
+    background: #fef9ec;
+  }
+  .term.selected-a { background: var(--a-bg); color: var(--a-color); border-color: var(--a-color); }
+  .term.selected-b { background: var(--b-bg); color: var(--b-color); border-color: var(--b-color); }
+  .term.selected-c { background: var(--c-bg); color: var(--c-color); border-color: var(--c-color); }
+  .term.selected-d { background: var(--d-bg); color: var(--d-color); border-color: var(--d-color); }
+  .term.selected-x { background: var(--x-bg); color: var(--x-color); border-color: var(--x-color); }
+  .term.selected-y { background: var(--y-bg); color: var(--y-color); border-color: var(--y-color); }
+  .term.selected-z { background: var(--z-bg); color: var(--z-color); border-color: var(--z-color); }
+
+  .term.wrong {
+    animation: shake 0.4s;
+    background: #fecaca;
+    color: #991b1b;
+    border-color: #991b1b;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  .operator { color: var(--muted); font-weight: 400; margin: 0 4px; }
+
+  /* Legenda colori */
+  .legend {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .legend-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+  }
+
+  /* Input risposta */
+  .answer-box {
+    text-align: center;
+    margin: 24px 0;
+  }
+  .answer-box label {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .answer-input {
+    font-family: 'Lexend', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    padding: 12px 20px;
+    width: 180px;
+    border: 3px solid var(--border);
+    border-radius: 14px;
+    background: #fff;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .answer-input:focus { border-color: var(--primary); }
+  .answer-input.correct { border-color: var(--success); background: var(--success-bg); }
+  .answer-input.wrong { border-color: var(--warn); background: var(--warn-bg); }
+
+  /* Bottoni */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+  .btn {
+    font-family: 'Lexend', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary {
+    background: var(--ink);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #000; box-shadow: var(--shadow-lg); }
+  .btn-secondary {
+    background: #fff;
+    color: var(--ink);
+    border: 2px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--ink); }
+  .btn-help {
+    background: var(--primary-bg);
+    color: var(--primary);
+  }
+  .btn-help:hover { background: #bfdbfe; }
+
+  /* Feedback */
+  .feedback {
+    padding: 20px 24px;
+    border-radius: 14px;
+    margin-top: 20px;
+    font-weight: 600;
+    font-size: 18px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+  }
+  .feedback.show { display: flex; animation: pop 0.4s; }
+  .feedback.success {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 2px solid var(--success);
+  }
+  .feedback.warn {
+    background: var(--warn-bg);
+    color: var(--warn);
+    border: 2px solid var(--warn);
+  }
+  .feedback.info {
+    background: var(--primary-bg);
+    color: var(--primary);
+    border: 2px solid var(--primary);
+  }
+  .feedback-icon { font-size: 28px; }
+
+  @keyframes pop {
+    0% { transform: scale(0.9); opacity: 0; }
+    60% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Step indicator */
+  .steps {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .step {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: #f1ebdd;
+    color: var(--muted);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+  }
+  .step.active {
+    background: var(--ink);
+    color: #fff;
+  }
+  .step.done {
+    background: var(--success);
+    color: #fff;
+  }
+
+  /* Frutti */
+  .fruit-row {
+    font-size: 56px;
+    text-align: center;
+    margin: 24px 0;
+    letter-spacing: 4px;
+  }
+  .fruit-equation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 20px 0;
+  }
+  .fruit-group {
+    padding: 14px 20px;
+    background: #fff;
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 32px;
+  }
+  .plus-sign {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--muted);
+  }
+
+  /* Teoria */
+  .theory-block {
+    margin-bottom: 28px;
+  }
+  .theory-block h3 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .theory-example {
+    background: #f9f5ee;
+    border-left: 5px solid var(--ink);
+    padding: 18px 22px;
+    border-radius: 10px;
+    font-size: 17px;
+    margin: 14px 0;
+  }
+  .big-letter {
+    display: inline-block;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 8px;
+    margin: 0 2px;
+  }
+  .big-letter.a { background: var(--a-bg); color: var(--a-color); }
+  .big-letter.b { background: var(--b-bg); color: var(--b-color); }
+  .big-letter.c { background: var(--c-bg); color: var(--c-color); }
+
+  /* Progresso stelle */
+  .stars-display {
+    display: inline-flex;
+    gap: 2px;
+    font-size: 16px;
+  }
+
+  /* Solution reveal */
+  .solution-box {
+    background: #f0f9ff;
+    border: 2px solid #bae6fd;
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-top: 16px;
+    display: none;
+  }
+  .solution-box.show { display: block; }
+  .solution-box h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+  .solution-step {
+    padding: 6px 0;
+    font-size: 16px;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { position: relative; height: auto; }
+    .main { padding: 24px; }
+    .expression { font-size: 34px; }
+    .welcome h1 { font-size: 32px; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #d6cfbe; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #bdb39e; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ========== SIDEBAR ========== -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">PF</div>
+    <div class="logo-text">
+      <div class="logo-title">Calcolo Letterale</div>
+      <div class="logo-sub">Prof. Flavio</div>
+    </div>
+  </div>
+
+  <div class="menu-title">Dashboard</div>
+  <button class="menu-item active" data-section="home">
+    <span class="menu-emoji">🏠</span>
+    <span class="menu-label">Home</span>
+  </button>
+  <button class="menu-item" data-section="teoria">
+    <span class="menu-emoji">📖</span>
+    <span class="menu-label">Impara</span>
+  </button>
+
+  <div class="menu-title">Esercizi</div>
+  <button class="menu-item" data-section="livello1">
+    <span class="menu-emoji">🍌</span>
+    <span class="menu-label">1. I frutti</span>
+    <span class="menu-stars" data-stars="livello1">☆☆☆</span>
+  </button>
+  <button class="menu-item" data-section="livello2">
+    <span class="menu-emoji">🎨</span>
+    <span class="menu-label">2. Riconosci</span>
+    <span class="menu-stars" data-stars="livello2">☆☆☆</span>
+  </button>
+  <button class="menu-item" data-section="livello3">
+    <span class="menu-emoji">🧩</span>
+    <span class="menu-label">3. Somma guidata</span>
+    <span class="menu-stars" data-stars="livello3">☆☆☆</span>
+  </button>
+  <button class="menu-item" data-section="livello4">
+    <span class="menu-emoji">➕</span>
+    <span class="menu-label">4. Una lettera</span>
+    <span class="menu-stars" data-stars="livello4">☆☆☆</span>
+  </button>
+  <button class="menu-item" data-section="livello5">
+    <span class="menu-emoji">🔤</span>
+    <span class="menu-label">5. Due lettere</span>
+    <span class="menu-stars" data-stars="livello5">☆☆☆</span>
+  </button>
+  <button class="menu-item" data-section="livello6">
+    <span class="menu-emoji">➖</span>
+    <span class="menu-label">6. Sottrazioni</span>
+    <span class="menu-stars" data-stars="livello6">☆☆☆</span>
+  </button>
+  <button class="menu-item" data-section="livello7">
+    <span class="menu-emoji">🔀</span>
+    <span class="menu-label">7. Più e meno</span>
+    <span class="menu-stars" data-stars="livello7">☆☆☆</span>
+  </button>
+  <button class="menu-item" data-section="livello8">
+    <span class="menu-emoji">1️⃣</span>
+    <span class="menu-label">8. Lettera da sola</span>
+    <span class="menu-stars" data-stars="livello8">☆☆☆</span>
+  </button>
+  <button class="menu-item" data-section="livello9">
+    <span class="menu-emoji">🎯</span>
+    <span class="menu-label">9. Tre lettere</span>
+    <span class="menu-stars" data-stars="livello9">☆☆☆</span>
+  </button>
+  <button class="menu-item" data-section="livello10">
+    <span class="menu-emoji">🎲</span>
+    <span class="menu-label">10. Allenamento</span>
+    <span class="menu-stars" data-stars="livello10">☆☆☆</span>
+  </button>
+</aside>
+
+<!-- ========== MAIN ========== -->
+<main class="main" id="main">
+
+<!-- ===== HOME ===== -->
+<section class="section" id="section-home">
+  <div class="welcome">
+    <h1>CIAO! 👋</h1>
+    <p>QUESTA È LA TUA APP PER IMPARARE IL CALCOLO LETTERALE. CLICCA SU UN LIVELLO PER INIZIARE!</p>
+  </div>
+
+  <div class="levels-grid">
+    <button class="level-card" data-section="teoria">
+      <div class="level-card-emoji">📖</div>
+      <div class="level-card-num">Inizia qui</div>
+      <div class="level-card-title">IMPARA</div>
+      <div class="level-card-desc">Scopri cos'è il calcolo letterale con i frutti.</div>
+    </button>
+    <button class="level-card" data-section="livello1">
+      <div class="level-card-emoji">🍌</div>
+      <div class="level-card-num">Livello 1</div>
+      <div class="level-card-title">I FRUTTI</div>
+      <div class="level-card-desc">Somma banane, mele e pere per capire le lettere.</div>
+    </button>
+    <button class="level-card" data-section="livello2">
+      <div class="level-card-emoji">🎨</div>
+      <div class="level-card-num">Livello 2</div>
+      <div class="level-card-title">RICONOSCI E COLORA</div>
+      <div class="level-card-desc">Trova e colora tutti i termini uguali.</div>
+    </button>
+    <button class="level-card" data-section="livello3">
+      <div class="level-card-emoji">🧩</div>
+      <div class="level-card-num">Livello 3</div>
+      <div class="level-card-title">SOMMA GUIDATA</div>
+      <div class="level-card-desc">Risolvi passo dopo passo, un pezzo alla volta.</div>
+    </button>
+    <button class="level-card" data-section="livello4">
+      <div class="level-card-emoji">➕</div>
+      <div class="level-card-num">Livello 4</div>
+      <div class="level-card-title">UNA LETTERA</div>
+      <div class="level-card-desc">Somme facili con una sola lettera.</div>
+    </button>
+    <button class="level-card" data-section="livello5">
+      <div class="level-card-emoji">🔤</div>
+      <div class="level-card-num">Livello 5</div>
+      <div class="level-card-title">DUE LETTERE</div>
+      <div class="level-card-desc">Somme con due lettere diverse.</div>
+    </button>
+    <button class="level-card" data-section="livello6">
+      <div class="level-card-emoji">➖</div>
+      <div class="level-card-num">Livello 6</div>
+      <div class="level-card-title">SOTTRAZIONI</div>
+      <div class="level-card-desc">Impara a togliere con le lettere.</div>
+    </button>
+    <button class="level-card" data-section="livello7">
+      <div class="level-card-emoji">🔀</div>
+      <div class="level-card-num">Livello 7</div>
+      <div class="level-card-title">PIÙ E MENO</div>
+      <div class="level-card-desc">Somme e sottrazioni insieme.</div>
+    </button>
+    <button class="level-card" data-section="livello8">
+      <div class="level-card-emoji">1️⃣</div>
+      <div class="level-card-num">Livello 8</div>
+      <div class="level-card-title">LETTERA DA SOLA</div>
+      <div class="level-card-desc">Quando la lettera è scritta senza numero.</div>
+    </button>
+    <button class="level-card" data-section="livello9">
+      <div class="level-card-emoji">🎯</div>
+      <div class="level-card-num">Livello 9</div>
+      <div class="level-card-title">TRE LETTERE</div>
+      <div class="level-card-desc">Esercizi con tre o più lettere.</div>
+    </button>
+    <button class="level-card" data-section="livello10">
+      <div class="level-card-emoji">🎲</div>
+      <div class="level-card-num">Livello 10</div>
+      <div class="level-card-title">ALLENAMENTO</div>
+      <div class="level-card-desc">Esercizi infiniti per allenarti tanto.</div>
+    </button>
+  </div>
+</section>
+
+<!-- ===== TEORIA ===== -->
+<section class="section" id="section-teoria" style="display:none">
+  <h1 class="page-title">📖 IMPARA</h1>
+  <p class="page-subtitle">Prima di fare gli esercizi, scopri il segreto delle lettere!</p>
+
+  <div class="card">
+    <div class="theory-block">
+      <h3>🍌 LE LETTERE SONO COME I FRUTTI</h3>
+      <p>In matematica possiamo usare le lettere al posto dei frutti. È un trucco!</p>
+      <div class="theory-example">
+        <div style="font-size:42px; text-align:center; margin-bottom:10px;">🍌🍌🍌</div>
+        <div style="text-align:center; font-size:20px;">3 banane si scrive <span class="big-letter b">3b</span></div>
+      </div>
+      <div class="theory-example">
+        <div style="font-size:42px; text-align:center; margin-bottom:10px;">🍎🍎</div>
+        <div style="text-align:center; font-size:20px;">2 mele si scrive <span class="big-letter a">2a</span></div>
+      </div>
+    </div>
+
+    <div class="theory-block">
+      <h3>🤝 POSSO SOMMARE SOLO COSE UGUALI</h3>
+      <p>Le banane con le banane. Le mele con le mele. Non posso mescolare!</p>
+      <div class="theory-example">
+        <div style="font-size:28px; text-align:center;">🍌🍌 + 🍌🍌🍌 = 🍌🍌🍌🍌🍌</div>
+        <div style="text-align:center; font-size:22px; margin-top:10px;"><span class="big-letter b">2b</span> + <span class="big-letter b">3b</span> = <span class="big-letter b">5b</span></div>
+      </div>
+      <div class="theory-example" style="border-left-color: var(--warn)">
+        <div style="text-align:center; font-size:20px;">⚠️ <span class="big-letter a">2a</span> + <span class="big-letter b">3b</span> NON si può unire!</div>
+        <div style="text-align:center; font-size:15px; color: var(--ink-soft); margin-top:6px;">Sono frutti diversi, restano separati.</div>
+      </div>
+    </div>
+
+    <div class="theory-block">
+      <h3>🔢 COME FACCIO LA SOMMA?</h3>
+      <p>Guardo i numeri davanti alle lettere uguali e li sommo!</p>
+      <div class="theory-example">
+        <div style="text-align:center; font-size:26px;">
+          <span class="big-letter a">3a</span> + <span class="big-letter a">2a</span> = <span class="big-letter a">5a</span>
+        </div>
+        <div style="text-align:center; font-size:15px; color: var(--ink-soft); margin-top:8px;">
+          3 + 2 = 5, la lettera <b>a</b> resta uguale!
+        </div>
+      </div>
+    </div>
+
+    <div class="theory-block">
+      <h3>🎨 IL TRUCCO DEL COLORE</h3>
+      <p>In questa app ogni lettera ha il suo colore:</p>
+      <div class="legend">
+        <div class="legend-item" style="background: var(--a-bg); color: var(--a-color)">
+          <div class="legend-swatch" style="background: var(--a-color)"></div> a = VERDE
+        </div>
+        <div class="legend-item" style="background: var(--b-bg); color: var(--b-color)">
+          <div class="legend-swatch" style="background: var(--b-color)"></div> b = ARANCIO
+        </div>
+        <div class="legend-item" style="background: var(--c-bg); color: var(--c-color)">
+          <div class="legend-swatch" style="background: var(--c-color)"></div> c = VIOLA
+        </div>
+        <div class="legend-item" style="background: var(--d-bg); color: var(--d-color)">
+          <div class="legend-swatch" style="background: var(--d-color)"></div> d = ROSA
+        </div>
+      </div>
+      <p style="margin-top:14px;">Se vedi lo stesso colore puoi sommare! 🎉</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" data-goto="livello1">INIZIA IL LIVELLO 1 →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LIVELLO 1: FRUTTI ===== -->
+<section class="section" id="section-livello1" style="display:none">
+  <h1 class="page-title">🍌 LIVELLO 1: I FRUTTI</h1>
+  <p class="page-subtitle">Somma i frutti uguali. Poi scrivi il risultato.</p>
+  <div class="card" id="exercise-livello1"></div>
+</section>
+
+<!-- ===== LIVELLO 2: RICONOSCI ===== -->
+<section class="section" id="section-livello2" style="display:none">
+  <h1 class="page-title">🎨 LIVELLO 2: RICONOSCI E COLORA</h1>
+  <p class="page-subtitle">Clicca su tutti i termini che hanno la stessa lettera.</p>
+  <div class="card" id="exercise-livello2"></div>
+</section>
+
+<!-- ===== LIVELLO 3: GUIDATO ===== -->
+<section class="section" id="section-livello3" style="display:none">
+  <h1 class="page-title">🧩 LIVELLO 3: SOMMA GUIDATA</h1>
+  <p class="page-subtitle">Risolvi l'esercizio un passo alla volta.</p>
+  <div class="card" id="exercise-livello3"></div>
+</section>
+
+<!-- ===== LIVELLO 4: UNA LETTERA ===== -->
+<section class="section" id="section-livello4" style="display:none">
+  <h1 class="page-title">➕ LIVELLO 4: UNA LETTERA</h1>
+  <p class="page-subtitle">Somma i termini con la stessa lettera.</p>
+  <div class="card" id="exercise-livello4"></div>
+</section>
+
+<!-- ===== LIVELLO 5: DUE LETTERE ===== -->
+<section class="section" id="section-livello5" style="display:none">
+  <h1 class="page-title">🔤 LIVELLO 5: DUE LETTERE</h1>
+  <p class="page-subtitle">Attento! Ci sono due lettere diverse. Sommale separate.</p>
+  <div class="card" id="exercise-livello5"></div>
+</section>
+
+<!-- ===== LIVELLO 6: SOTTRAZIONI ===== -->
+<section class="section" id="section-livello6" style="display:none">
+  <h1 class="page-title">➖ LIVELLO 6: SOTTRAZIONI</h1>
+  <p class="page-subtitle">Ora proviamo a togliere! Il meno funziona come nei numeri.</p>
+  <div class="card" id="exercise-livello6"></div>
+</section>
+
+<!-- ===== LIVELLO 7: MISTI ===== -->
+<section class="section" id="section-livello7" style="display:none">
+  <h1 class="page-title">🔀 LIVELLO 7: PIÙ E MENO</h1>
+  <p class="page-subtitle">Attenzione ai segni: c'è più e meno insieme!</p>
+  <div class="card" id="exercise-livello7"></div>
+</section>
+
+<!-- ===== LIVELLO 8: COEFF 1 ===== -->
+<section class="section" id="section-livello8" style="display:none">
+  <h1 class="page-title">1️⃣ LIVELLO 8: LETTERA DA SOLA</h1>
+  <p class="page-subtitle">Quando vedi la lettera senza numero, vale 1!</p>
+  <div class="card" id="exercise-livello8"></div>
+</section>
+
+<!-- ===== LIVELLO 9: TRE LETTERE ===== -->
+<section class="section" id="section-livello9" style="display:none">
+  <h1 class="page-title">🎯 LIVELLO 9: TRE LETTERE</h1>
+  <p class="page-subtitle">Sfida grande: tre lettere diverse in un solo esercizio!</p>
+  <div class="card" id="exercise-livello9"></div>
+</section>
+
+<!-- ===== LIVELLO 10: ALLENAMENTO ===== -->
+<section class="section" id="section-livello10" style="display:none">
+  <h1 class="page-title">🎲 LIVELLO 10: ALLENAMENTO LIBERO</h1>
+  <p class="page-subtitle">Esercizi casuali, senza fine! Allenati quanto vuoi.</p>
+  <div class="card" id="exercise-livello10"></div>
+</section>
+
+</main>
+</div>
+
+<script>
+// =====================================================================
+// STATO APPLICAZIONE
+// =====================================================================
+const app = {
+  currentSection: 'home',
+  progress: {
+    livello1: 0, livello2: 0, livello3: 0, livello4: 0, livello5: 0,
+    livello6: 0, livello7: 0, livello8: 0, livello9: 0, livello10: 0
+  },
+  currentEx: {}, // stato esercizio corrente per livello
+};
+
+// =====================================================================
+// NAVIGAZIONE
+// =====================================================================
+function goTo(section) {
+  document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+  const target = document.getElementById('section-' + section);
+  if (target) target.style.display = 'block';
+  document.querySelectorAll('.menu-item').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.menu-item[data-section="${section}"]`);
+  if (btn) btn.classList.add('active');
+  app.currentSection = section;
+  window.scrollTo(0, 0);
+
+  // Carica esercizio corrispondente
+  if (section === 'livello1') renderLivello1();
+  if (section === 'livello2') renderLivello2();
+  if (section === 'livello3') renderLivello3();
+  if (section === 'livello4') renderLivello4();
+  if (section === 'livello5') renderLivello5();
+  if (section === 'livello6') renderLivello6();
+  if (section === 'livello7') renderLivello7();
+  if (section === 'livello8') renderLivello8();
+  if (section === 'livello9') renderLivello9();
+  if (section === 'livello10') renderLivello10();
+}
+
+document.querySelectorAll('[data-section]').forEach(btn => {
+  btn.addEventListener('click', () => goTo(btn.dataset.section));
+});
+document.querySelectorAll('[data-goto]').forEach(btn => {
+  btn.addEventListener('click', () => goTo(btn.dataset.goto));
+});
+
+// =====================================================================
+// UTILITÀ
+// =====================================================================
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function choice(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+function updateStars(level, count) {
+  const el = document.querySelector(`[data-stars="${level}"]`);
+  if (!el) return;
+  const filled = Math.min(3, count);
+  el.textContent = '★'.repeat(filled) + '☆'.repeat(3 - filled);
+}
+function celebrate(level) {
+  app.progress[level] = Math.min(3, (app.progress[level] || 0) + 1);
+  updateStars(level, app.progress[level]);
+}
+
+// Scrive "3a" con lo span colorato. coeff può essere 1 (mostrato solo "a").
+function termHTML(coeff, letter, showOne = false, sign = '+') {
+  const c = (Math.abs(coeff) === 1 && !showOne) ? '' : Math.abs(coeff);
+  const signStr = sign === '-' ? '-' : '';
+  return `<span class="term selected-${letter}">${signStr}${c}${letter}</span>`;
+}
+
+// =====================================================================
+// LIVELLO 1: I FRUTTI (concreto → semiconcreto)
+// =====================================================================
+const fruitLetters = {
+  '🍌': {letter: 'b', name: 'banane', sing: 'banana'},
+  '🍎': {letter: 'a', name: 'mele', sing: 'mela'},
+  '🍐': {letter: 'p', name: 'pere', sing: 'pera'},
+  '🍊': {letter: 'o', name: 'arance', sing: 'arancia'},
+  '🍓': {letter: 'f', name: 'fragole', sing: 'fragola'},
+  '🍇': {letter: 'u', name: 'uve', sing: 'uva'},
+};
+
+const livello1Exercises = [
+  // (frutto, quantità1, quantità2, [quantità3])
+  {f: '🍌', a: 2, b: 3},
+  {f: '🍎', a: 3, b: 2},
+  {f: '🍐', a: 1, b: 4},
+  {f: '🍊', a: 2, b: 2},
+  {f: '🍓', a: 4, b: 1},
+  {f: '🍌', a: 3, b: 3},
+  {f: '🍎', a: 1, b: 2, c: 2},
+  {f: '🍐', a: 2, b: 1, c: 2},
+  {f: '🍌', a: 1, b: 1, c: 3},
+  {f: '🍊', a: 2, b: 3, c: 1},
+];
+
+function renderLivello1() {
+  const idx = app.currentEx.livello1 || 0;
+  const ex = livello1Exercises[idx % livello1Exercises.length];
+  const fruit = ex.f;
+  const info = fruitLetters[fruit];
+  const total = ex.a + ex.b + (ex.c || 0);
+
+  let fruitRow1 = fruit.repeat(ex.a);
+  let fruitRow2 = fruit.repeat(ex.b);
+  let fruitRow3 = ex.c ? fruit.repeat(ex.c) : '';
+
+  const html = `
+    <div class="exercise-header">
+      <span class="exercise-counter">ESERCIZIO ${(idx % livello1Exercises.length) + 1} / ${livello1Exercises.length}</span>
+      <span class="stars-display">${'★'.repeat(app.progress.livello1)}${'☆'.repeat(3 - app.progress.livello1)}</span>
+    </div>
+
+    <div class="instruction">
+      <span class="instruction-emoji">🍌</span>
+      <span>QUANTI ${info.name.toUpperCase()} CI SONO IN TUTTO?</span>
+    </div>
+
+    <div class="fruit-equation">
+      <div class="fruit-group">${fruitRow1}</div>
+      <span class="plus-sign">+</span>
+      <div class="fruit-group">${fruitRow2}</div>
+      ${ex.c ? `<span class="plus-sign">+</span><div class="fruit-group">${fruitRow3}</div>` : ''}
+      <span class="plus-sign">=</span>
+      <span style="font-size:42px; font-weight:800;">?</span>
+    </div>
+
+    <div class="answer-box">
+      <label>SCRIVI IL NUMERO:</label>
+      <input type="number" class="answer-input" id="ans-l1" autocomplete="off">
+    </div>
+
+    <div class="feedback" id="fb-l1"></div>
+
+    <div class="solution-box" id="sol-l1">
+      <h4>💡 COME SI FA:</h4>
+      <div class="solution-step">👉 Conta tutti i ${info.name}: ${ex.a}${ex.c ? ' + ' + ex.b + ' + ' + ex.c : ' + ' + ex.b} = <b>${total}</b></div>
+      <div class="solution-step">👉 In matematica si scrive: <span class="big-letter b">${ex.a}${info.letter}</span> + <span class="big-letter b">${ex.b}${info.letter}</span>${ex.c ? ` + <span class="big-letter b">${ex.c}${info.letter}</span>` : ''} = <span class="big-letter b">${total}${info.letter}</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-help" onclick="document.getElementById('sol-l1').classList.add('show')">💡 AIUTO</button>
+      <button class="btn btn-primary" onclick="checkLivello1(${total})">✓ CONTROLLA</button>
+      <button class="btn btn-secondary" onclick="nextLivello1()">AVANTI →</button>
+    </div>
+  `;
+
+  document.getElementById('exercise-livello1').innerHTML = html;
+}
+
+function checkLivello1(correct) {
+  const input = document.getElementById('ans-l1');
+  const fb = document.getElementById('fb-l1');
+  const val = parseInt(input.value);
+  if (val === correct) {
+    input.classList.add('correct');
+    input.classList.remove('wrong');
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🎉</span> BRAVISSIMO! HAI CONTATO BENE!';
+    celebrate('livello1');
+  } else {
+    input.classList.add('wrong');
+    input.classList.remove('correct');
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">💪</span> PROVA ANCORA! CONTA DI NUOVO I FRUTTI.';
+  }
+}
+
+function nextLivello1() {
+  app.currentEx.livello1 = ((app.currentEx.livello1 || 0) + 1) % livello1Exercises.length;
+  renderLivello1();
+}
+
+// =====================================================================
+// LIVELLO 2: RICONOSCI E COLORA
+// =====================================================================
+const livello2Exercises = [
+  {terms: ['2a', '3b', 'a', '4b'], target: 'a'},
+  {terms: ['3a', '2b', '5a', 'b'], target: 'a'},
+  {terms: ['2a', '3b', 'a', '4b'], target: 'b'},
+  {terms: ['4b', 'a', '2b', '3a'], target: 'b'},
+  {terms: ['2a', '3b', 'c', '4a', 'b'], target: 'a'},
+  {terms: ['3c', '2a', 'c', 'a', '4c'], target: 'c'},
+  {terms: ['5a', '2b', 'a', '3b', '4a'], target: 'a'},
+  {terms: ['2x', '3y', 'x', '4y', '2x'], target: 'x'},
+  {terms: ['4y', '2x', 'y', '3y', 'x'], target: 'y'},
+  {terms: ['2a', 'b', '3a', 'c', '4a'], target: 'a'},
+  {terms: ['b', '3b', '2b', 'a', '4b'], target: 'b'},
+  {terms: ['3a', '2b', '4a', 'b', '5a', 'a'], target: 'a'},
+];
+
+function renderLivello2() {
+  const idx = app.currentEx.livello2 || 0;
+  const ex = livello2Exercises[idx % livello2Exercises.length];
+  const selected = new Set();
+
+  const termsHTML = ex.terms.map((t, i) => {
+    const letter = t.match(/[a-z]/)[0];
+    return `<span class="term clickable" data-idx="${i}" data-letter="${letter}" data-target="${ex.target}">${t}</span>`;
+  }).join(' <span class="operator">+</span> ');
+
+  const targetColor = `var(--${ex.target}-color)`;
+
+  const html = `
+    <div class="exercise-header">
+      <span class="exercise-counter">ESERCIZIO ${(idx % livello2Exercises.length) + 1} / ${livello2Exercises.length}</span>
+      <span class="stars-display">${'★'.repeat(app.progress.livello2)}${'☆'.repeat(3 - app.progress.livello2)}</span>
+    </div>
+
+    <div class="instruction">
+      <span class="instruction-emoji">🎨</span>
+      <span>CLICCA SU TUTTI I TERMINI CON LA LETTERA "<span style="color:${targetColor}; font-size:22px;">${ex.target}</span>"</span>
+    </div>
+
+    <div class="expression" id="expr-l2">${termsHTML}</div>
+
+    <div class="feedback" id="fb-l2"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="renderLivello2()">🔄 RICOMINCIA</button>
+      <button class="btn btn-primary" onclick="checkLivello2()">✓ CONTROLLA</button>
+      <button class="btn btn-secondary" onclick="nextLivello2()">AVANTI →</button>
+    </div>
+  `;
+
+  document.getElementById('exercise-livello2').innerHTML = html;
+
+  // Event listener sui termini
+  document.querySelectorAll('#expr-l2 .term').forEach(el => {
+    el.addEventListener('click', () => {
+      const letter = el.dataset.letter;
+      const target = el.dataset.target;
+      if (el.classList.contains('selected-' + target)) {
+        el.classList.remove('selected-' + target);
+      } else {
+        // rimuovi altre selezioni e metti quella del target
+        el.className = 'term clickable selected-' + target;
+        el.dataset.letter = letter;
+        el.dataset.target = target;
+      }
+    });
+  });
+}
+
+function checkLivello2() {
+  const idx = app.currentEx.livello2 || 0;
+  const ex = livello2Exercises[idx % livello2Exercises.length];
+  let allCorrect = true;
+
+  document.querySelectorAll('#expr-l2 .term').forEach(el => {
+    const letter = el.dataset.letter;
+    const isSelected = el.classList.contains('selected-' + ex.target);
+    const shouldBeSelected = letter === ex.target;
+
+    if (shouldBeSelected && !isSelected) allCorrect = false;
+    if (!shouldBeSelected && isSelected) allCorrect = false;
+  });
+
+  const fb = document.getElementById('fb-l2');
+  if (allCorrect) {
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🎉</span> PERFETTO! HAI TROVATO TUTTI I TERMINI GIUSTI!';
+    celebrate('livello2');
+  } else {
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">👀</span> GUARDA MEGLIO! DEVI CLICCARE SOLO I TERMINI CON "' + ex.target + '".';
+  }
+}
+
+function nextLivello2() {
+  app.currentEx.livello2 = ((app.currentEx.livello2 || 0) + 1) % livello2Exercises.length;
+  renderLivello2();
+}
+
+// =====================================================================
+// LIVELLO 3: SOMMA GUIDATA (multi-step)
+// =====================================================================
+const livello3Exercises = [
+  {terms: [{c:3,l:'a'},{c:2,l:'b'},{c:1,l:'a'},{c:4,l:'b'}]},
+  {terms: [{c:2,l:'a'},{c:3,l:'b'},{c:4,l:'a'},{c:1,l:'b'}]},
+  {terms: [{c:1,l:'a'},{c:2,l:'b'},{c:3,l:'a'},{c:2,l:'b'}]},
+  {terms: [{c:4,l:'a'},{c:1,l:'b'},{c:2,l:'a'},{c:3,l:'b'}]},
+  {terms: [{c:2,l:'a'},{c:2,l:'b'},{c:3,l:'a'},{c:1,l:'b'}]},
+  {terms: [{c:3,l:'x'},{c:1,l:'y'},{c:2,l:'x'},{c:3,l:'y'}]},
+  {terms: [{c:1,l:'x'},{c:4,l:'y'},{c:3,l:'x'},{c:1,l:'y'}]},
+  {terms: [{c:2,l:'a'},{c:1,l:'b'},{c:3,l:'a'},{c:4,l:'b'},{c:1,l:'a'}]},
+  {terms: [{c:2,l:'c'},{c:3,l:'d'},{c:1,l:'c'},{c:2,l:'d'}]},
+  {terms: [{c:4,l:'a'},{c:2,l:'b'},{c:1,l:'a'},{c:3,l:'b'},{c:2,l:'a'}]},
+];
+
+function renderLivello3() {
+  if (!app.currentEx.livello3) app.currentEx.livello3 = {idx: 0, step: 1, selectedA: [], selectedB: []};
+  const state = app.currentEx.livello3;
+  const ex = livello3Exercises[state.idx % livello3Exercises.length];
+
+  // Ricava le due lettere uniche dell'esercizio
+  const letters = [...new Set(ex.terms.map(t => t.l))];
+  const l1 = letters[0], l2 = letters[1];
+
+  // Calcola somme corrette
+  const sum1 = ex.terms.filter(t => t.l === l1).reduce((s,t) => s+t.c, 0);
+  const sum2 = ex.terms.filter(t => t.l === l2).reduce((s,t) => s+t.c, 0);
+
+  const termsHTML = ex.terms.map((t, i) => {
+    const isSelectedA = state.step === 1 && state.selectedA.includes(i);
+    const isSelectedB = state.step === 2 && state.selectedB.includes(i);
+    const doneA = state.step > 1 && t.l === l1;
+    const doneB = state.step > 2 && t.l === l2;
+    let cls = 'term';
+    if (state.step <= 2) cls += ' clickable';
+    if (isSelectedA || doneA) cls += ' selected-' + l1;
+    if (isSelectedB || doneB) cls += ' selected-' + l2;
+    return `<span class="${cls}" data-idx="${i}" data-letter="${t.l}">${t.c}${t.l}</span>`;
+  }).join(' <span class="operator">+</span> ');
+
+  let instructionText = '';
+  let stepContent = '';
+
+  if (state.step === 1) {
+    instructionText = `PASSO 1: CLICCA TUTTI I TERMINI CON "${l1}"`;
+    stepContent = `
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkLivello3Step1()">✓ HO FINITO</button>
+      </div>
+    `;
+  } else if (state.step === 2) {
+    instructionText = `PASSO 2: CLICCA TUTTI I TERMINI CON "${l2}"`;
+    stepContent = `
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkLivello3Step2()">✓ HO FINITO</button>
+      </div>
+    `;
+  } else if (state.step === 3) {
+    instructionText = `PASSO 3: QUANTO FA LA SOMMA DEI TERMINI CON "${l1}"?`;
+    const sommaVisual = ex.terms.filter(t => t.l === l1).map(t => t.c).join(' + ');
+    stepContent = `
+      <div class="answer-box">
+        <div style="font-size:22px; margin-bottom:10px;">${sommaVisual} = ?</div>
+        <label>SCRIVI IL NUMERO:</label>
+        <input type="number" class="answer-input" id="ans-l3-s3" autocomplete="off">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkLivello3Step3(${sum1})">✓ CONTROLLA</button>
+      </div>
+    `;
+  } else if (state.step === 4) {
+    instructionText = `PASSO 4: QUANTO FA LA SOMMA DEI TERMINI CON "${l2}"?`;
+    const sommaVisual = ex.terms.filter(t => t.l === l2).map(t => t.c).join(' + ');
+    stepContent = `
+      <div class="answer-box">
+        <div style="font-size:22px; margin-bottom:10px;">${sommaVisual} = ?</div>
+        <label>SCRIVI IL NUMERO:</label>
+        <input type="number" class="answer-input" id="ans-l3-s4" autocomplete="off">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkLivello3Step4(${sum2})">✓ CONTROLLA</button>
+      </div>
+    `;
+  } else if (state.step === 5) {
+    instructionText = `PASSO 5: SCRIVI IL RISULTATO FINALE!`;
+    stepContent = `
+      <div style="text-align:center; font-size:24px; margin:20px 0;">
+        <span class="big-letter ${l1}">${sum1}${l1}</span> + <span class="big-letter ${l2}">${sum2}${l2}</span> = ?
+      </div>
+      <div style="display:flex; gap:16px; justify-content:center; margin:20px 0; flex-wrap:wrap;">
+        <div>
+          <label style="display:block; text-align:center; margin-bottom:8px; font-weight:600;">Termini con "${l1}":</label>
+          <input type="number" class="answer-input" id="ans-l3-s5a" style="width:120px;" autocomplete="off" placeholder="?">
+          <span style="font-size:32px; font-weight:700; color:var(--${l1}-color)">${l1}</span>
+        </div>
+        <div style="display:flex; align-items:center; font-size:32px; color:var(--muted);">+</div>
+        <div>
+          <label style="display:block; text-align:center; margin-bottom:8px; font-weight:600;">Termini con "${l2}":</label>
+          <input type="number" class="answer-input" id="ans-l3-s5b" style="width:120px;" autocomplete="off" placeholder="?">
+          <span style="font-size:32px; font-weight:700; color:var(--${l2}-color)">${l2}</span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkLivello3Step5(${sum1}, ${sum2})">✓ CONTROLLA</button>
+      </div>
+    `;
+  } else if (state.step === 6) {
+    instructionText = `🎉 COMPLETATO!`;
+    stepContent = `
+      <div style="text-align:center; font-size:28px; margin:30px 0; padding:24px; background: var(--success-bg); border-radius:14px; color: var(--success); font-weight:700;">
+        ${termsHTML.replace(/clickable/g, '')} = <br><br>
+        <span class="big-letter ${l1}">${sum1}${l1}</span> + <span class="big-letter ${l2}">${sum2}${l2}</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="nextLivello3()">ESERCIZIO SUCCESSIVO →</button>
+      </div>
+    `;
+  }
+
+  const stepDisplay = [1,2,3,4,5].map(s => {
+    let cls = 'step';
+    if (s < state.step) cls += ' done';
+    if (s === state.step) cls += ' active';
+    return `<div class="${cls}">${s}</div>`;
+  }).join('');
+
+  const html = `
+    <div class="exercise-header">
+      <span class="exercise-counter">ESERCIZIO ${(state.idx % livello3Exercises.length) + 1} / ${livello3Exercises.length}</span>
+      <span class="stars-display">${'★'.repeat(app.progress.livello3)}${'☆'.repeat(3 - app.progress.livello3)}</span>
+    </div>
+
+    <div class="steps">${stepDisplay}</div>
+
+    <div class="instruction">
+      <span class="instruction-emoji">🧩</span>
+      <span>${instructionText}</span>
+    </div>
+
+    <div class="expression" id="expr-l3">${termsHTML}</div>
+
+    <div class="feedback" id="fb-l3"></div>
+
+    ${stepContent}
+  `;
+
+  document.getElementById('exercise-livello3').innerHTML = html;
+
+  // Listener per click sui termini (solo step 1 e 2)
+  if (state.step === 1 || state.step === 2) {
+    document.querySelectorAll('#expr-l3 .term.clickable').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = parseInt(el.dataset.idx);
+        const targetClass = state.step === 1 ? 'selected-' + l1 : 'selected-' + l2;
+        const arr = state.step === 1 ? state.selectedA : state.selectedB;
+
+        if (el.classList.contains(targetClass)) {
+          el.classList.remove(targetClass);
+          const pos = arr.indexOf(idx);
+          if (pos > -1) arr.splice(pos, 1);
+        } else {
+          el.classList.add(targetClass);
+          arr.push(idx);
+        }
+      });
+    });
+  }
+}
+
+function checkLivello3Step1() {
+  const state = app.currentEx.livello3;
+  const ex = livello3Exercises[state.idx % livello3Exercises.length];
+  const letters = [...new Set(ex.terms.map(t => t.l))];
+  const l1 = letters[0];
+  const correct = ex.terms.map((t,i) => t.l === l1 ? i : -1).filter(i => i !== -1);
+  const fb = document.getElementById('fb-l3');
+
+  const selectedSet = new Set(state.selectedA);
+  const correctSet = new Set(correct);
+  const match = selectedSet.size === correctSet.size && [...selectedSet].every(x => correctSet.has(x));
+
+  if (match) {
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">✅</span> BRAVO! HAI TROVATO TUTTI I TERMINI CON "' + l1 + '". ORA CERCA QUELLI CON L\'ALTRA LETTERA.';
+    setTimeout(() => { state.step = 2; renderLivello3(); }, 1200);
+  } else {
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">🔍</span> GUARDA MEGLIO! CERCA SOLO LA LETTERA "' + l1 + '".';
+  }
+}
+
+function checkLivello3Step2() {
+  const state = app.currentEx.livello3;
+  const ex = livello3Exercises[state.idx % livello3Exercises.length];
+  const letters = [...new Set(ex.terms.map(t => t.l))];
+  const l2 = letters[1];
+  const correct = ex.terms.map((t,i) => t.l === l2 ? i : -1).filter(i => i !== -1);
+  const fb = document.getElementById('fb-l3');
+
+  const selectedSet = new Set(state.selectedB);
+  const correctSet = new Set(correct);
+  const match = selectedSet.size === correctSet.size && [...selectedSet].every(x => correctSet.has(x));
+
+  if (match) {
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">✅</span> PERFETTO! ORA CONTA QUANTO FA LA SOMMA.';
+    setTimeout(() => { state.step = 3; renderLivello3(); }, 1200);
+  } else {
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">🔍</span> ATTENZIONE! CERCA SOLO LA LETTERA "' + l2 + '".';
+  }
+}
+
+function checkLivello3Step3(correct) {
+  const input = document.getElementById('ans-l3-s3');
+  const fb = document.getElementById('fb-l3');
+  const val = parseInt(input.value);
+  if (val === correct) {
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🎯</span> GIUSTO! VAI AVANTI!';
+    setTimeout(() => { app.currentEx.livello3.step = 4; renderLivello3(); }, 1200);
+  } else {
+    input.classList.add('wrong');
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">💪</span> RICONTA I NUMERI CON CALMA.';
+  }
+}
+
+function checkLivello3Step4(correct) {
+  const input = document.getElementById('ans-l3-s4');
+  const fb = document.getElementById('fb-l3');
+  const val = parseInt(input.value);
+  if (val === correct) {
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🎯</span> GIUSTO! ULTIMO PASSO!';
+    setTimeout(() => { app.currentEx.livello3.step = 5; renderLivello3(); }, 1200);
+  } else {
+    input.classList.add('wrong');
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">💪</span> RICONTA I NUMERI CON CALMA.';
+  }
+}
+
+function checkLivello3Step5(c1, c2) {
+  const a = parseInt(document.getElementById('ans-l3-s5a').value);
+  const b = parseInt(document.getElementById('ans-l3-s5b').value);
+  const fb = document.getElementById('fb-l3');
+  if (a === c1 && b === c2) {
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🎉</span> ESERCIZIO COMPLETO! FANTASTICO!';
+    celebrate('livello3');
+    setTimeout(() => { app.currentEx.livello3.step = 6; renderLivello3(); }, 1500);
+  } else {
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">💪</span> QUASI! CONTROLLA I DUE NUMERI.';
+  }
+}
+
+function nextLivello3() {
+  app.currentEx.livello3 = {
+    idx: ((app.currentEx.livello3?.idx || 0) + 1) % livello3Exercises.length,
+    step: 1,
+    selectedA: [],
+    selectedB: []
+  };
+  renderLivello3();
+}
+
+// =====================================================================
+// LIVELLO 4: UNA LETTERA (somme semplici)
+// =====================================================================
+const livello4Exercises = [
+  {terms: [{c:2,l:'a'},{c:3,l:'a'}]},
+  {terms: [{c:4,l:'a'},{c:1,l:'a'}]},
+  {terms: [{c:3,l:'b'},{c:2,l:'b'}]},
+  {terms: [{c:5,l:'b'},{c:2,l:'b'}]},
+  {terms: [{c:2,l:'c'},{c:3,l:'c'}]},
+  {terms: [{c:4,l:'c'},{c:2,l:'c'}]},
+  {terms: [{c:1,l:'a'},{c:2,l:'a'},{c:3,l:'a'}]},
+  {terms: [{c:2,l:'b'},{c:1,l:'b'},{c:4,l:'b'}]},
+  {terms: [{c:3,l:'a'},{c:1,l:'a'},{c:2,l:'a'}]},
+  {terms: [{c:1,l:'c'},{c:3,l:'c'},{c:2,l:'c'}]},
+  {terms: [{c:2,l:'x'},{c:3,l:'x'}]},
+  {terms: [{c:4,l:'y'},{c:1,l:'y'}]},
+  {terms: [{c:3,l:'x'},{c:2,l:'x'},{c:1,l:'x'}]},
+  {terms: [{c:1,l:'a'},{c:1,l:'a'},{c:2,l:'a'},{c:1,l:'a'}]},
+  {terms: [{c:2,l:'b'},{c:2,l:'b'},{c:2,l:'b'}]},
+];
+
+function renderLivello4() {
+  const idx = app.currentEx.livello4 || 0;
+  const ex = livello4Exercises[idx % livello4Exercises.length];
+  const letter = ex.terms[0].l;
+  const sum = ex.terms.reduce((s,t) => s+t.c, 0);
+
+  const termsHTML = ex.terms.map(t =>
+    `<span class="term selected-${letter}">${t.c}${t.l}</span>`
+  ).join(' <span class="operator">+</span> ');
+
+  const html = `
+    <div class="exercise-header">
+      <span class="exercise-counter">ESERCIZIO ${(idx % livello4Exercises.length) + 1} / ${livello4Exercises.length}</span>
+      <span class="stars-display">${'★'.repeat(app.progress.livello4)}${'☆'.repeat(3 - app.progress.livello4)}</span>
+    </div>
+
+    <div class="instruction">
+      <span class="instruction-emoji">➕</span>
+      <span>SOMMA I NUMERI DAVANTI ALLA LETTERA "${letter}".</span>
+    </div>
+
+    <div class="expression">${termsHTML} <span class="operator">=</span> ?</div>
+
+    <div class="answer-box">
+      <label>SCRIVI IL RISULTATO:</label>
+      <div style="display:flex; justify-content:center; align-items:center; gap:4px;">
+        <input type="number" class="answer-input" id="ans-l4" style="width:140px;" autocomplete="off">
+        <span style="font-size:36px; font-weight:700; color:var(--${letter}-color); padding:0 8px;">${letter}</span>
+      </div>
+    </div>
+
+    <div class="feedback" id="fb-l4"></div>
+
+    <div class="solution-box" id="sol-l4">
+      <h4>💡 COME SI FA:</h4>
+      <div class="solution-step">👉 Somma solo i numeri: ${ex.terms.map(t => t.c).join(' + ')} = <b>${sum}</b></div>
+      <div class="solution-step">👉 La lettera <b>${letter}</b> resta uguale.</div>
+      <div class="solution-step">👉 Risultato: <span class="big-letter ${letter}">${sum}${letter}</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-help" onclick="document.getElementById('sol-l4').classList.add('show')">💡 AIUTO</button>
+      <button class="btn btn-primary" onclick="checkLivello4(${sum})">✓ CONTROLLA</button>
+      <button class="btn btn-secondary" onclick="nextLivello4()">AVANTI →</button>
+    </div>
+  `;
+
+  document.getElementById('exercise-livello4').innerHTML = html;
+}
+
+function checkLivello4(correct) {
+  const input = document.getElementById('ans-l4');
+  const fb = document.getElementById('fb-l4');
+  const val = parseInt(input.value);
+  if (val === correct) {
+    input.classList.add('correct');
+    input.classList.remove('wrong');
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🎉</span> BRAVISSIMO! RISULTATO GIUSTO!';
+    celebrate('livello4');
+  } else {
+    input.classList.add('wrong');
+    input.classList.remove('correct');
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">💪</span> RIPROVA! SOMMA BENE I NUMERI.';
+  }
+}
+
+function nextLivello4() {
+  app.currentEx.livello4 = ((app.currentEx.livello4 || 0) + 1) % livello4Exercises.length;
+  renderLivello4();
+}
+
+// =====================================================================
+// LIVELLO 5: DUE LETTERE
+// =====================================================================
+const livello5Exercises = [
+  {terms: [{c:2,l:'a'},{c:3,l:'b'},{c:1,l:'a'},{c:2,l:'b'}]},
+  {terms: [{c:3,l:'a'},{c:1,l:'b'},{c:2,l:'a'},{c:4,l:'b'}]},
+  {terms: [{c:1,l:'a'},{c:2,l:'b'},{c:3,l:'a'},{c:1,l:'b'}]},
+  {terms: [{c:4,l:'a'},{c:2,l:'b'},{c:1,l:'a'},{c:3,l:'b'}]},
+  {terms: [{c:2,l:'a'},{c:2,l:'b'},{c:3,l:'a'},{c:3,l:'b'}]},
+  {terms: [{c:1,l:'a'},{c:4,l:'b'},{c:2,l:'a'},{c:1,l:'b'}]},
+  {terms: [{c:3,l:'x'},{c:2,l:'y'},{c:1,l:'x'},{c:3,l:'y'}]},
+  {terms: [{c:2,l:'x'},{c:4,l:'y'},{c:3,l:'x'},{c:1,l:'y'}]},
+  {terms: [{c:1,l:'c'},{c:2,l:'d'},{c:3,l:'c'},{c:1,l:'d'}]},
+  {terms: [{c:4,l:'c'},{c:2,l:'d'},{c:1,l:'c'},{c:3,l:'d'}]},
+  {terms: [{c:3,l:'a'},{c:2,l:'b'},{c:2,l:'a'},{c:3,l:'b'},{c:1,l:'a'}]},
+  {terms: [{c:1,l:'a'},{c:1,l:'b'},{c:2,l:'a'},{c:2,l:'b'},{c:3,l:'a'}]},
+  {terms: [{c:2,l:'a'},{c:1,l:'b'},{c:1,l:'a'},{c:2,l:'b'},{c:2,l:'a'},{c:1,l:'b'}]},
+  {terms: [{c:2,l:'x'},{c:3,l:'y'},{c:2,l:'x'},{c:2,l:'y'},{c:1,l:'x'}]},
+  {terms: [{c:4,l:'a'},{c:1,l:'b'},{c:2,l:'a'},{c:3,l:'b'},{c:2,l:'a'}]},
+];
+
+function renderLivello5() {
+  const idx = app.currentEx.livello5 || 0;
+  const ex = livello5Exercises[idx % livello5Exercises.length];
+  const letters = [...new Set(ex.terms.map(t => t.l))];
+  const l1 = letters[0], l2 = letters[1];
+  const sum1 = ex.terms.filter(t => t.l === l1).reduce((s,t) => s+t.c, 0);
+  const sum2 = ex.terms.filter(t => t.l === l2).reduce((s,t) => s+t.c, 0);
+
+  const termsHTML = ex.terms.map(t =>
+    `<span class="term selected-${t.l}">${t.c}${t.l}</span>`
+  ).join(' <span class="operator">+</span> ');
+
+  const html = `
+    <div class="exercise-header">
+      <span class="exercise-counter">ESERCIZIO ${(idx % livello5Exercises.length) + 1} / ${livello5Exercises.length}</span>
+      <span class="stars-display">${'★'.repeat(app.progress.livello5)}${'☆'.repeat(3 - app.progress.livello5)}</span>
+    </div>
+
+    <div class="instruction">
+      <span class="instruction-emoji">🔤</span>
+      <span>SOMMA I TERMINI CON "${l1}" E POI QUELLI CON "${l2}".</span>
+    </div>
+
+    <div class="expression">${termsHTML}</div>
+
+    <div style="display:flex; gap:20px; justify-content:center; margin:20px 0; flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--${l1}-color);">TERMINI CON "${l1}":</label>
+        <div style="display:flex; align-items:center;">
+          <input type="number" class="answer-input" id="ans-l5a" style="width:120px;" autocomplete="off">
+          <span style="font-size:36px; font-weight:700; color:var(--${l1}-color); padding-left:4px;">${l1}</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:flex-end; font-size:36px; color:var(--muted); padding-bottom:10px;">+</div>
+      <div style="text-align:center;">
+        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--${l2}-color);">TERMINI CON "${l2}":</label>
+        <div style="display:flex; align-items:center;">
+          <input type="number" class="answer-input" id="ans-l5b" style="width:120px;" autocomplete="off">
+          <span style="font-size:36px; font-weight:700; color:var(--${l2}-color); padding-left:4px;">${l2}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feedback" id="fb-l5"></div>
+
+    <div class="solution-box" id="sol-l5">
+      <h4>💡 COME SI FA:</h4>
+      <div class="solution-step">👉 Termini con <b style="color:var(--${l1}-color)">${l1}</b>: ${ex.terms.filter(t=>t.l===l1).map(t=>t.c).join(' + ')} = <b>${sum1}${l1}</b></div>
+      <div class="solution-step">👉 Termini con <b style="color:var(--${l2}-color)">${l2}</b>: ${ex.terms.filter(t=>t.l===l2).map(t=>t.c).join(' + ')} = <b>${sum2}${l2}</b></div>
+      <div class="solution-step">👉 Risultato: <span class="big-letter ${l1}">${sum1}${l1}</span> + <span class="big-letter ${l2}">${sum2}${l2}</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-help" onclick="document.getElementById('sol-l5').classList.add('show')">💡 AIUTO</button>
+      <button class="btn btn-primary" onclick="checkLivello5(${sum1}, ${sum2})">✓ CONTROLLA</button>
+      <button class="btn btn-secondary" onclick="nextLivello5()">AVANTI →</button>
+    </div>
+  `;
+
+  document.getElementById('exercise-livello5').innerHTML = html;
+}
+
+function checkLivello5(c1, c2) {
+  const a = parseInt(document.getElementById('ans-l5a').value);
+  const b = parseInt(document.getElementById('ans-l5b').value);
+  const fb = document.getElementById('fb-l5');
+  const inpA = document.getElementById('ans-l5a');
+  const inpB = document.getElementById('ans-l5b');
+
+  if (a === c1 && b === c2) {
+    inpA.classList.add('correct'); inpB.classList.add('correct');
+    inpA.classList.remove('wrong'); inpB.classList.remove('wrong');
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🎉</span> RISULTATO PERFETTO!';
+    celebrate('livello5');
+  } else {
+    if (a !== c1) { inpA.classList.add('wrong'); inpA.classList.remove('correct'); }
+    else { inpA.classList.add('correct'); inpA.classList.remove('wrong'); }
+    if (b !== c2) { inpB.classList.add('wrong'); inpB.classList.remove('correct'); }
+    else { inpB.classList.add('correct'); inpB.classList.remove('wrong'); }
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">💪</span> QUASI! CONTROLLA CHE TU NON ABBIA MESCOLATO LE LETTERE.';
+  }
+}
+
+function nextLivello5() {
+  app.currentEx.livello5 = ((app.currentEx.livello5 || 0) + 1) % livello5Exercises.length;
+  renderLivello5();
+}
+
+// =====================================================================
+// LIVELLO 6: SOTTRAZIONI
+// =====================================================================
+const livello6Exercises = [
+  // Rappresentazione: array di {c, l, sign} dove sign è '+' o '-'
+  {terms: [{c:5,l:'a',s:'+'},{c:2,l:'a',s:'-'}]},
+  {terms: [{c:4,l:'a',s:'+'},{c:1,l:'a',s:'-'}]},
+  {terms: [{c:6,l:'b',s:'+'},{c:3,l:'b',s:'-'}]},
+  {terms: [{c:5,l:'b',s:'+'},{c:2,l:'b',s:'-'}]},
+  {terms: [{c:7,l:'a',s:'+'},{c:4,l:'a',s:'-'}]},
+  {terms: [{c:8,l:'c',s:'+'},{c:3,l:'c',s:'-'}]},
+  {terms: [{c:6,l:'a',s:'+'},{c:2,l:'a',s:'-'},{c:1,l:'a',s:'-'}]},
+  {terms: [{c:7,l:'b',s:'+'},{c:3,l:'b',s:'-'},{c:1,l:'b',s:'-'}]},
+  {terms: [{c:5,l:'c',s:'+'},{c:1,l:'c',s:'-'},{c:2,l:'c',s:'-'}]},
+  {terms: [{c:9,l:'x',s:'+'},{c:4,l:'x',s:'-'}]},
+  {terms: [{c:8,l:'y',s:'+'},{c:3,l:'y',s:'-'}]},
+  {terms: [{c:6,l:'a',s:'+'},{c:1,l:'a',s:'-'},{c:2,l:'a',s:'-'},{c:1,l:'a',s:'-'}]},
+  {terms: [{c:7,l:'b',s:'+'},{c:2,l:'b',s:'-'},{c:1,l:'b',s:'-'}]},
+  {terms: [{c:5,l:'a',s:'+'},{c:3,l:'a',s:'-'}]},
+  {terms: [{c:4,l:'b',s:'+'},{c:2,l:'b',s:'-'}]},
+];
+
+function renderLivello6() {
+  const idx = app.currentEx.livello6 || 0;
+  const ex = livello6Exercises[idx % livello6Exercises.length];
+  const letter = ex.terms[0].l;
+  const sum = ex.terms.reduce((s,t) => s + (t.s === '-' ? -t.c : t.c), 0);
+
+  const termsHTML = ex.terms.map((t, i) => {
+    const sign = i === 0 ? '' : `<span class="operator">${t.s}</span>`;
+    return sign + ` <span class="term selected-${letter}">${t.c}${letter}</span>`;
+  }).join(' ');
+
+  const html = `
+    <div class="exercise-header">
+      <span class="exercise-counter">ESERCIZIO ${(idx % livello6Exercises.length) + 1} / ${livello6Exercises.length}</span>
+      <span class="stars-display">${'★'.repeat(app.progress.livello6)}${'☆'.repeat(3 - app.progress.livello6)}</span>
+    </div>
+
+    <div class="instruction">
+      <span class="instruction-emoji">➖</span>
+      <span>QUESTA VOLTA DEVI SOTTRARRE! STAI ATTENTO AI SEGNI.</span>
+    </div>
+
+    <div class="expression">${termsHTML} <span class="operator">=</span> ?</div>
+
+    <div class="answer-box">
+      <label>SCRIVI IL RISULTATO:</label>
+      <div style="display:flex; justify-content:center; align-items:center; gap:4px;">
+        <input type="number" class="answer-input" id="ans-l6" style="width:140px;" autocomplete="off">
+        <span style="font-size:36px; font-weight:700; color:var(--${letter}-color); padding:0 8px;">${letter}</span>
+      </div>
+    </div>
+
+    <div class="feedback" id="fb-l6"></div>
+
+    <div class="solution-box" id="sol-l6">
+      <h4>💡 COME SI FA:</h4>
+      <div class="solution-step">👉 Calcola solo i numeri: ${ex.terms.map((t,i) => (i === 0 ? '' : (t.s + ' ')) + t.c).join(' ')} = <b>${sum}</b></div>
+      <div class="solution-step">👉 La lettera <b>${letter}</b> resta uguale.</div>
+      <div class="solution-step">👉 Risultato: <span class="big-letter ${letter}">${sum}${letter}</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-help" onclick="document.getElementById('sol-l6').classList.add('show')">💡 AIUTO</button>
+      <button class="btn btn-primary" onclick="checkLivello6(${sum})">✓ CONTROLLA</button>
+      <button class="btn btn-secondary" onclick="nextLivello6()">AVANTI →</button>
+    </div>
+  `;
+
+  document.getElementById('exercise-livello6').innerHTML = html;
+}
+
+function checkLivello6(correct) {
+  const input = document.getElementById('ans-l6');
+  const fb = document.getElementById('fb-l6');
+  const val = parseInt(input.value);
+  if (val === correct) {
+    input.classList.add('correct');
+    input.classList.remove('wrong');
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🎉</span> BRAVO! SOTTRAZIONE GIUSTA!';
+    celebrate('livello6');
+  } else {
+    input.classList.add('wrong');
+    input.classList.remove('correct');
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">🔢</span> RIPROVA. RICORDA: IL MENO TOGLIE!';
+  }
+}
+
+function nextLivello6() {
+  app.currentEx.livello6 = ((app.currentEx.livello6 || 0) + 1) % livello6Exercises.length;
+  renderLivello6();
+}
+
+// =====================================================================
+// LIVELLO 7: MISTI (somma e sottrazione insieme)
+// =====================================================================
+const livello7Exercises = [
+  {terms: [{c:3,l:'a',s:'+'},{c:2,l:'b',s:'+'},{c:1,l:'a',s:'-'},{c:1,l:'b',s:'+'}]},
+  {terms: [{c:4,l:'a',s:'+'},{c:3,l:'b',s:'+'},{c:2,l:'a',s:'-'},{c:1,l:'b',s:'-'}]},
+  {terms: [{c:5,l:'a',s:'+'},{c:2,l:'b',s:'+'},{c:1,l:'a',s:'-'},{c:1,l:'b',s:'-'}]},
+  {terms: [{c:2,l:'a',s:'+'},{c:4,l:'b',s:'+'},{c:1,l:'a',s:'+'},{c:2,l:'b',s:'-'}]},
+  {terms: [{c:6,l:'a',s:'+'},{c:3,l:'b',s:'+'},{c:2,l:'a',s:'-'},{c:1,l:'b',s:'-'}]},
+  {terms: [{c:3,l:'a',s:'+'},{c:2,l:'a',s:'-'},{c:4,l:'b',s:'+'},{c:1,l:'b',s:'-'}]},
+  {terms: [{c:5,l:'x',s:'+'},{c:2,l:'y',s:'+'},{c:2,l:'x',s:'-'},{c:1,l:'y',s:'+'}]},
+  {terms: [{c:4,l:'c',s:'+'},{c:3,l:'d',s:'+'},{c:1,l:'c',s:'-'},{c:2,l:'d',s:'-'}]},
+  {terms: [{c:2,l:'a',s:'+'},{c:3,l:'a',s:'+'},{c:1,l:'a',s:'-'},{c:2,l:'b',s:'+'},{c:1,l:'b',s:'-'}]},
+  {terms: [{c:4,l:'b',s:'+'},{c:2,l:'b',s:'-'},{c:3,l:'a',s:'+'},{c:1,l:'a',s:'-'}]},
+  {terms: [{c:5,l:'a',s:'+'},{c:3,l:'b',s:'+'},{c:2,l:'a',s:'-'},{c:1,l:'b',s:'-'},{c:1,l:'a',s:'+'}]},
+  {terms: [{c:3,l:'x',s:'+'},{c:4,l:'y',s:'+'},{c:1,l:'x',s:'-'},{c:2,l:'y',s:'-'}]},
+];
+
+function renderLivello7() {
+  const idx = app.currentEx.livello7 || 0;
+  const ex = livello7Exercises[idx % livello7Exercises.length];
+  const letters = [...new Set(ex.terms.map(t => t.l))];
+  const l1 = letters[0], l2 = letters[1];
+  const sum1 = ex.terms.filter(t => t.l === l1).reduce((s,t) => s + (t.s === '-' ? -t.c : t.c), 0);
+  const sum2 = ex.terms.filter(t => t.l === l2).reduce((s,t) => s + (t.s === '-' ? -t.c : t.c), 0);
+
+  const termsHTML = ex.terms.map((t, i) => {
+    const sign = i === 0 ? '' : `<span class="operator">${t.s}</span>`;
+    return sign + ` <span class="term selected-${t.l}">${t.c}${t.l}</span>`;
+  }).join(' ');
+
+  const html = `
+    <div class="exercise-header">
+      <span class="exercise-counter">ESERCIZIO ${(idx % livello7Exercises.length) + 1} / ${livello7Exercises.length}</span>
+      <span class="stars-display">${'★'.repeat(app.progress.livello7)}${'☆'.repeat(3 - app.progress.livello7)}</span>
+    </div>
+
+    <div class="instruction">
+      <span class="instruction-emoji">🔀</span>
+      <span>ATTENTO AI SEGNI! PIÙ E MENO INSIEME.</span>
+    </div>
+
+    <div class="expression">${termsHTML}</div>
+
+    <div style="display:flex; gap:20px; justify-content:center; margin:20px 0; flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--${l1}-color);">TERMINI "${l1}":</label>
+        <div style="display:flex; align-items:center;">
+          <input type="number" class="answer-input" id="ans-l7a" style="width:120px;" autocomplete="off">
+          <span style="font-size:36px; font-weight:700; color:var(--${l1}-color); padding-left:4px;">${l1}</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:flex-end; font-size:36px; color:var(--muted); padding-bottom:10px;">+</div>
+      <div style="text-align:center;">
+        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--${l2}-color);">TERMINI "${l2}":</label>
+        <div style="display:flex; align-items:center;">
+          <input type="number" class="answer-input" id="ans-l7b" style="width:120px;" autocomplete="off">
+          <span style="font-size:36px; font-weight:700; color:var(--${l2}-color); padding-left:4px;">${l2}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feedback" id="fb-l7"></div>
+
+    <div class="solution-box" id="sol-l7">
+      <h4>💡 COME SI FA:</h4>
+      <div class="solution-step">👉 Termini con <b style="color:var(--${l1}-color)">${l1}</b>: ${ex.terms.filter(t=>t.l===l1).map((t,i) => (i===0?'':(t.s+' '))+t.c).join(' ')} = <b>${sum1}${l1}</b></div>
+      <div class="solution-step">👉 Termini con <b style="color:var(--${l2}-color)">${l2}</b>: ${ex.terms.filter(t=>t.l===l2).map((t,i) => (i===0?'':(t.s+' '))+t.c).join(' ')} = <b>${sum2}${l2}</b></div>
+      <div class="solution-step">👉 Risultato: <span class="big-letter ${l1}">${sum1}${l1}</span> + <span class="big-letter ${l2}">${sum2}${l2}</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-help" onclick="document.getElementById('sol-l7').classList.add('show')">💡 AIUTO</button>
+      <button class="btn btn-primary" onclick="checkLivello7(${sum1}, ${sum2})">✓ CONTROLLA</button>
+      <button class="btn btn-secondary" onclick="nextLivello7()">AVANTI →</button>
+    </div>
+  `;
+
+  document.getElementById('exercise-livello7').innerHTML = html;
+}
+
+function checkLivello7(c1, c2) {
+  const a = parseInt(document.getElementById('ans-l7a').value);
+  const b = parseInt(document.getElementById('ans-l7b').value);
+  const fb = document.getElementById('fb-l7');
+  const inpA = document.getElementById('ans-l7a');
+  const inpB = document.getElementById('ans-l7b');
+
+  if (a === c1 && b === c2) {
+    inpA.classList.add('correct'); inpB.classList.add('correct');
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🎉</span> GRANDIOSO! HAI FATTO BENE ATTENZIONE AI SEGNI!';
+    celebrate('livello7');
+  } else {
+    if (a !== c1) inpA.classList.add('wrong'); else inpA.classList.add('correct');
+    if (b !== c2) inpB.classList.add('wrong'); else inpB.classList.add('correct');
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">🔎</span> GUARDA BENE OGNI SEGNO: + AGGIUNGE, − TOGLIE.';
+  }
+}
+
+function nextLivello7() {
+  app.currentEx.livello7 = ((app.currentEx.livello7 || 0) + 1) % livello7Exercises.length;
+  renderLivello7();
+}
+
+// =====================================================================
+// LIVELLO 8: COEFFICIENTE 1 (lettera da sola)
+// =====================================================================
+// Rappresentazione speciale: se c è 1 e "solo" = true, mostra solo "a"
+const livello8Exercises = [
+  {terms: [{c:1,l:'a',solo:true},{c:2,l:'a'}]},
+  {terms: [{c:3,l:'a'},{c:1,l:'a',solo:true}]},
+  {terms: [{c:1,l:'b',solo:true},{c:3,l:'b'}]},
+  {terms: [{c:1,l:'a',solo:true},{c:1,l:'a',solo:true}]},
+  {terms: [{c:2,l:'a'},{c:1,l:'a',solo:true},{c:1,l:'a',solo:true}]},
+  {terms: [{c:1,l:'c',solo:true},{c:2,l:'c'},{c:1,l:'c',solo:true}]},
+  {terms: [{c:1,l:'a',solo:true},{c:2,l:'b'},{c:2,l:'a'},{c:1,l:'b',solo:true}]},
+  {terms: [{c:1,l:'x',solo:true},{c:3,l:'x'},{c:1,l:'x',solo:true}]},
+  {terms: [{c:1,l:'b',solo:true},{c:1,l:'b',solo:true},{c:2,l:'b'}]},
+  {terms: [{c:3,l:'a'},{c:1,l:'a',solo:true},{c:2,l:'a'}]},
+  {terms: [{c:1,l:'a',solo:true},{c:1,l:'b',solo:true},{c:2,l:'a'},{c:3,l:'b'}]},
+  {terms: [{c:2,l:'c'},{c:1,l:'c',solo:true},{c:1,l:'c',solo:true},{c:1,l:'c',solo:true}]},
+];
+
+function renderLivello8() {
+  const idx = app.currentEx.livello8 || 0;
+  const ex = livello8Exercises[idx % livello8Exercises.length];
+
+  // Due lettere o una?
+  const letters = [...new Set(ex.terms.map(t => t.l))];
+  const hasTwo = letters.length > 1;
+
+  const termsHTML = ex.terms.map(t => {
+    const display = t.solo ? t.l : t.c + t.l;
+    return `<span class="term selected-${t.l}">${display}</span>`;
+  }).join(' <span class="operator">+</span> ');
+
+  if (!hasTwo) {
+    const letter = letters[0];
+    const sum = ex.terms.reduce((s,t) => s + t.c, 0);
+
+    const html = `
+      <div class="exercise-header">
+        <span class="exercise-counter">ESERCIZIO ${(idx % livello8Exercises.length) + 1} / ${livello8Exercises.length}</span>
+        <span class="stars-display">${'★'.repeat(app.progress.livello8)}${'☆'.repeat(3 - app.progress.livello8)}</span>
+      </div>
+
+      <div class="instruction">
+        <span class="instruction-emoji">1️⃣</span>
+        <span>QUANDO "${letter}" È SCRITTO DA SOLO VALE 1${letter}!</span>
+      </div>
+
+      <div class="expression">${termsHTML} <span class="operator">=</span> ?</div>
+
+      <div class="answer-box">
+        <label>SCRIVI IL RISULTATO:</label>
+        <div style="display:flex; justify-content:center; align-items:center; gap:4px;">
+          <input type="number" class="answer-input" id="ans-l8" style="width:140px;" autocomplete="off">
+          <span style="font-size:36px; font-weight:700; color:var(--${letter}-color); padding:0 8px;">${letter}</span>
+        </div>
+      </div>
+
+      <div class="feedback" id="fb-l8"></div>
+
+      <div class="solution-box" id="sol-l8">
+        <h4>💡 COME SI FA:</h4>
+        <div class="solution-step">👉 Ogni "${letter}" da solo vale <b>1${letter}</b>.</div>
+        <div class="solution-step">👉 Somma: ${ex.terms.map(t => t.c).join(' + ')} = <b>${sum}</b></div>
+        <div class="solution-step">👉 Risultato: <span class="big-letter ${letter}">${sum}${letter}</span></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-help" onclick="document.getElementById('sol-l8').classList.add('show')">💡 AIUTO</button>
+        <button class="btn btn-primary" onclick="checkLivello8a(${sum})">✓ CONTROLLA</button>
+        <button class="btn btn-secondary" onclick="nextLivello8()">AVANTI →</button>
+      </div>
+    `;
+    document.getElementById('exercise-livello8').innerHTML = html;
+  } else {
+    // Due lettere
+    const l1 = letters[0], l2 = letters[1];
+    const sum1 = ex.terms.filter(t => t.l === l1).reduce((s,t) => s+t.c, 0);
+    const sum2 = ex.terms.filter(t => t.l === l2).reduce((s,t) => s+t.c, 0);
+
+    const html = `
+      <div class="exercise-header">
+        <span class="exercise-counter">ESERCIZIO ${(idx % livello8Exercises.length) + 1} / ${livello8Exercises.length}</span>
+        <span class="stars-display">${'★'.repeat(app.progress.livello8)}${'☆'.repeat(3 - app.progress.livello8)}</span>
+      </div>
+
+      <div class="instruction">
+        <span class="instruction-emoji">1️⃣</span>
+        <span>RICORDA: LETTERA DA SOLA = 1 VOLTA QUELLA LETTERA!</span>
+      </div>
+
+      <div class="expression">${termsHTML}</div>
+
+      <div style="display:flex; gap:20px; justify-content:center; margin:20px 0; flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--${l1}-color);">"${l1}":</label>
+          <div style="display:flex; align-items:center;">
+            <input type="number" class="answer-input" id="ans-l8a" style="width:120px;" autocomplete="off">
+            <span style="font-size:36px; font-weight:700; color:var(--${l1}-color); padding-left:4px;">${l1}</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:flex-end; font-size:36px; color:var(--muted); padding-bottom:10px;">+</div>
+        <div style="text-align:center;">
+          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--${l2}-color);">"${l2}":</label>
+          <div style="display:flex; align-items:center;">
+            <input type="number" class="answer-input" id="ans-l8b" style="width:120px;" autocomplete="off">
+            <span style="font-size:36px; font-weight:700; color:var(--${l2}-color); padding-left:4px;">${l2}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback" id="fb-l8"></div>
+
+      <div class="solution-box" id="sol-l8">
+        <h4>💡 COME SI FA:</h4>
+        <div class="solution-step">👉 Ogni lettera da sola vale <b>1</b>.</div>
+        <div class="solution-step">👉 "${l1}": ${ex.terms.filter(t=>t.l===l1).map(t=>t.c).join(' + ')} = <b>${sum1}${l1}</b></div>
+        <div class="solution-step">👉 "${l2}": ${ex.terms.filter(t=>t.l===l2).map(t=>t.c).join(' + ')} = <b>${sum2}${l2}</b></div>
+        <div class="solution-step">👉 Risultato: <span class="big-letter ${l1}">${sum1}${l1}</span> + <span class="big-letter ${l2}">${sum2}${l2}</span></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-help" onclick="document.getElementById('sol-l8').classList.add('show')">💡 AIUTO</button>
+        <button class="btn btn-primary" onclick="checkLivello8b(${sum1}, ${sum2})">✓ CONTROLLA</button>
+        <button class="btn btn-secondary" onclick="nextLivello8()">AVANTI →</button>
+      </div>
+    `;
+    document.getElementById('exercise-livello8').innerHTML = html;
+  }
+}
+
+function checkLivello8a(correct) {
+  const input = document.getElementById('ans-l8');
+  const fb = document.getElementById('fb-l8');
+  const val = parseInt(input.value);
+  if (val === correct) {
+    input.classList.add('correct');
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🎉</span> ECCELLENTE! HAI RICORDATO CHE LA LETTERA DA SOLA VALE 1!';
+    celebrate('livello8');
+  } else {
+    input.classList.add('wrong');
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">💡</span> RIPROVA! OGNI LETTERA SENZA NUMERO VALE 1.';
+  }
+}
+
+function checkLivello8b(c1, c2) {
+  const a = parseInt(document.getElementById('ans-l8a').value);
+  const b = parseInt(document.getElementById('ans-l8b').value);
+  const fb = document.getElementById('fb-l8');
+  const inpA = document.getElementById('ans-l8a');
+  const inpB = document.getElementById('ans-l8b');
+  if (a === c1 && b === c2) {
+    inpA.classList.add('correct'); inpB.classList.add('correct');
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🎉</span> MAGNIFICO! DUE LETTERE CON IL TRUCCO DELL\'UNO!';
+    celebrate('livello8');
+  } else {
+    if (a !== c1) inpA.classList.add('wrong'); else inpA.classList.add('correct');
+    if (b !== c2) inpB.classList.add('wrong'); else inpB.classList.add('correct');
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">💡</span> LA LETTERA SENZA NUMERO VALE 1. RIPROVA!';
+  }
+}
+
+function nextLivello8() {
+  app.currentEx.livello8 = ((app.currentEx.livello8 || 0) + 1) % livello8Exercises.length;
+  renderLivello8();
+}
+
+// =====================================================================
+// LIVELLO 9: TRE LETTERE
+// =====================================================================
+const livello9Exercises = [
+  {terms: [{c:2,l:'a'},{c:3,l:'b'},{c:1,l:'c'},{c:1,l:'a'},{c:2,l:'b'}]},
+  {terms: [{c:3,l:'a'},{c:1,l:'b'},{c:2,l:'c'},{c:2,l:'a'},{c:3,l:'c'}]},
+  {terms: [{c:1,l:'a'},{c:2,l:'b'},{c:3,l:'c'},{c:2,l:'a'},{c:1,l:'b'},{c:1,l:'c'}]},
+  {terms: [{c:4,l:'a'},{c:2,l:'b'},{c:1,l:'c'},{c:1,l:'a'},{c:1,l:'b'}]},
+  {terms: [{c:2,l:'a'},{c:2,l:'b'},{c:2,l:'c'},{c:1,l:'a'},{c:1,l:'b'},{c:1,l:'c'}]},
+  {terms: [{c:3,l:'x'},{c:2,l:'y'},{c:1,l:'z'},{c:1,l:'x'},{c:2,l:'z'}]},
+  {terms: [{c:1,l:'x'},{c:3,l:'y'},{c:2,l:'z'},{c:2,l:'x'},{c:1,l:'y'}]},
+  {terms: [{c:2,l:'a'},{c:1,l:'b'},{c:3,l:'c'},{c:3,l:'a'},{c:2,l:'b'},{c:1,l:'c'}]},
+  {terms: [{c:4,l:'a'},{c:3,l:'b'},{c:2,l:'d'},{c:1,l:'a'},{c:1,l:'b'},{c:2,l:'d'}]},
+  {terms: [{c:1,l:'a'},{c:2,l:'b'},{c:3,l:'c'},{c:1,l:'a'},{c:1,l:'b'},{c:1,l:'c'}]},
+  {terms: [{c:2,l:'x'},{c:1,l:'y'},{c:3,l:'z'},{c:1,l:'x'},{c:2,l:'y'},{c:1,l:'z'}]},
+  {terms: [{c:3,l:'a'},{c:2,l:'b'},{c:1,l:'c'},{c:1,l:'a'},{c:3,l:'b'},{c:2,l:'c'}]},
+];
+
+function renderLivello9() {
+  const idx = app.currentEx.livello9 || 0;
+  const ex = livello9Exercises[idx % livello9Exercises.length];
+  const letters = [...new Set(ex.terms.map(t => t.l))];
+  const sums = {};
+  letters.forEach(l => {
+    sums[l] = ex.terms.filter(t => t.l === l).reduce((s,t) => s+t.c, 0);
+  });
+
+  const termsHTML = ex.terms.map(t =>
+    `<span class="term selected-${t.l}">${t.c}${t.l}</span>`
+  ).join(' <span class="operator">+</span> ');
+
+  const inputsHTML = letters.map((l, i) => `
+    ${i > 0 ? '<div style="display:flex; align-items:flex-end; font-size:36px; color:var(--muted); padding-bottom:10px;">+</div>' : ''}
+    <div style="text-align:center;">
+      <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--${l}-color);">"${l}":</label>
+      <div style="display:flex; align-items:center;">
+        <input type="number" class="answer-input" id="ans-l9-${l}" style="width:100px;" autocomplete="off">
+        <span style="font-size:36px; font-weight:700; color:var(--${l}-color); padding-left:4px;">${l}</span>
+      </div>
+    </div>
+  `).join('');
+
+  const sumsJSON = JSON.stringify(sums);
+
+  const html = `
+    <div class="exercise-header">
+      <span class="exercise-counter">ESERCIZIO ${(idx % livello9Exercises.length) + 1} / ${livello9Exercises.length}</span>
+      <span class="stars-display">${'★'.repeat(app.progress.livello9)}${'☆'.repeat(3 - app.progress.livello9)}</span>
+    </div>
+
+    <div class="instruction">
+      <span class="instruction-emoji">🎯</span>
+      <span>CI SONO TRE LETTERE! SOMMA OGNUNA CON LA SUA STESSA LETTERA.</span>
+    </div>
+
+    <div class="expression">${termsHTML}</div>
+
+    <div style="display:flex; gap:16px; justify-content:center; margin:20px 0; flex-wrap:wrap;">
+      ${inputsHTML}
+    </div>
+
+    <div class="feedback" id="fb-l9"></div>
+
+    <div class="solution-box" id="sol-l9">
+      <h4>💡 COME SI FA:</h4>
+      ${letters.map(l => `<div class="solution-step">👉 "${l}": ${ex.terms.filter(t=>t.l===l).map(t=>t.c).join(' + ')} = <b>${sums[l]}${l}</b></div>`).join('')}
+      <div class="solution-step">👉 Risultato: ${letters.map(l => `<span class="big-letter ${l}">${sums[l]}${l}</span>`).join(' + ')}</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-help" onclick="document.getElementById('sol-l9').classList.add('show')">💡 AIUTO</button>
+      <button class="btn btn-primary" onclick='checkLivello9(${sumsJSON}, ${JSON.stringify(letters)})'>✓ CONTROLLA</button>
+      <button class="btn btn-secondary" onclick="nextLivello9()">AVANTI →</button>
+    </div>
+  `;
+
+  document.getElementById('exercise-livello9').innerHTML = html;
+}
+
+function checkLivello9(correctSums, letters) {
+  const fb = document.getElementById('fb-l9');
+  let allCorrect = true;
+  letters.forEach(l => {
+    const input = document.getElementById('ans-l9-' + l);
+    const val = parseInt(input.value);
+    if (val === correctSums[l]) {
+      input.classList.add('correct'); input.classList.remove('wrong');
+    } else {
+      input.classList.add('wrong'); input.classList.remove('correct');
+      allCorrect = false;
+    }
+  });
+
+  if (allCorrect) {
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🏆</span> STRAORDINARIO! TRE LETTERE E TUTTE GIUSTE!';
+    celebrate('livello9');
+  } else {
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">🎯</span> CONTROLLA OGNI COLORE E RIPROVA.';
+  }
+}
+
+function nextLivello9() {
+  app.currentEx.livello9 = ((app.currentEx.livello9 || 0) + 1) % livello9Exercises.length;
+  renderLivello9();
+}
+
+// =====================================================================
+// LIVELLO 10: ALLENAMENTO LIBERO (generatore casuale)
+// =====================================================================
+function generateRandomExercise() {
+  // Difficoltà variabile
+  const difficulty = randInt(1, 4);
+  const availableLetters = ['a', 'b', 'c', 'd', 'x', 'y'];
+  const numLetters = difficulty <= 2 ? randInt(1, 2) : randInt(2, 3);
+  const letters = [];
+  while (letters.length < numLetters) {
+    const l = choice(availableLetters);
+    if (!letters.includes(l)) letters.push(l);
+  }
+
+  const numTerms = difficulty === 1 ? randInt(2, 3) : difficulty === 2 ? randInt(3, 4) : randInt(4, 6);
+  const terms = [];
+  let hasPositive = false;
+
+  for (let i = 0; i < numTerms; i++) {
+    const l = choice(letters);
+    const c = randInt(1, 5);
+    let s = '+';
+    if (difficulty >= 3 && i > 0 && Math.random() > 0.6) s = '-';
+    terms.push({c, l, s});
+    if (s === '+') hasPositive = true;
+  }
+
+  // Garantisci che ogni lettera abbia totale >= 0 (evita risultati negativi)
+  const sums = {};
+  letters.forEach(l => {
+    sums[l] = terms.filter(t => t.l === l).reduce((s,t) => s + (t.s === '-' ? -t.c : t.c), 0);
+  });
+
+  // Se qualche somma è negativa o zero, rigenera
+  const anyNegOrZero = Object.values(sums).some(v => v <= 0);
+  if (anyNegOrZero) return generateRandomExercise();
+
+  return {terms, letters, sums};
+}
+
+function renderLivello10() {
+  if (!app.currentEx.livello10) app.currentEx.livello10 = generateRandomExercise();
+  const ex = app.currentEx.livello10;
+  const letters = ex.letters;
+
+  const termsHTML = ex.terms.map((t, i) => {
+    const sign = i === 0 ? '' : `<span class="operator">${t.s}</span>`;
+    return sign + ` <span class="term selected-${t.l}">${t.c}${t.l}</span>`;
+  }).join(' ');
+
+  const inputsHTML = letters.map((l, i) => `
+    ${i > 0 ? '<div style="display:flex; align-items:flex-end; font-size:36px; color:var(--muted); padding-bottom:10px;">+</div>' : ''}
+    <div style="text-align:center;">
+      <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--${l}-color);">"${l}":</label>
+      <div style="display:flex; align-items:center;">
+        <input type="number" class="answer-input" id="ans-l10-${l}" style="width:110px;" autocomplete="off">
+        <span style="font-size:36px; font-weight:700; color:var(--${l}-color); padding-left:4px;">${l}</span>
+      </div>
+    </div>
+  `).join('');
+
+  const solutionSteps = letters.map(l => {
+    const termsForL = ex.terms.filter(t => t.l === l);
+    const calc = termsForL.map((t,i) => (i === 0 ? '' : t.s + ' ') + t.c).join(' ');
+    return `<div class="solution-step">👉 "${l}": ${calc} = <b>${ex.sums[l]}${l}</b></div>`;
+  }).join('');
+
+  const html = `
+    <div class="exercise-header">
+      <span class="exercise-counter">🎲 ESERCIZIO CASUALE</span>
+      <span class="stars-display">${'★'.repeat(app.progress.livello10)}${'☆'.repeat(3 - app.progress.livello10)}</span>
+    </div>
+
+    <div class="instruction">
+      <span class="instruction-emoji">🎲</span>
+      <span>ALLENATI! OGNI ESERCIZIO È DIVERSO.</span>
+    </div>
+
+    <div class="expression">${termsHTML}</div>
+
+    <div style="display:flex; gap:16px; justify-content:center; margin:20px 0; flex-wrap:wrap;">
+      ${inputsHTML}
+    </div>
+
+    <div class="feedback" id="fb-l10"></div>
+
+    <div class="solution-box" id="sol-l10">
+      <h4>💡 COME SI FA:</h4>
+      ${solutionSteps}
+      <div class="solution-step">👉 Risultato: ${letters.map(l => `<span class="big-letter ${l}">${ex.sums[l]}${l}</span>`).join(' + ')}</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-help" onclick="document.getElementById('sol-l10').classList.add('show')">💡 AIUTO</button>
+      <button class="btn btn-primary" onclick='checkLivello10(${JSON.stringify(ex.sums)}, ${JSON.stringify(letters)})'>✓ CONTROLLA</button>
+      <button class="btn btn-secondary" onclick="nextLivello10()">🎲 NUOVO ESERCIZIO</button>
+    </div>
+  `;
+
+  document.getElementById('exercise-livello10').innerHTML = html;
+}
+
+function checkLivello10(correctSums, letters) {
+  const fb = document.getElementById('fb-l10');
+  let allCorrect = true;
+  letters.forEach(l => {
+    const input = document.getElementById('ans-l10-' + l);
+    const val = parseInt(input.value);
+    if (val === correctSums[l]) {
+      input.classList.add('correct'); input.classList.remove('wrong');
+    } else {
+      input.classList.add('wrong'); input.classList.remove('correct');
+      allCorrect = false;
+    }
+  });
+
+  if (allCorrect) {
+    fb.className = 'feedback success show';
+    fb.innerHTML = '<span class="feedback-icon">🌟</span> FANTASTICO! HAI RISOLTO L\'ESERCIZIO!';
+    celebrate('livello10');
+  } else {
+    fb.className = 'feedback warn show';
+    fb.innerHTML = '<span class="feedback-icon">💪</span> NON ARRENDERTI! RIPROVA CON CALMA.';
+  }
+}
+
+function nextLivello10() {
+  app.currentEx.livello10 = generateRandomExercise();
+  renderLivello10();
+}
+
+// =====================================================================
+// INIZIALIZZAZIONE
+// =====================================================================
+goTo('home');
+</script>
+</body>
+</html>
